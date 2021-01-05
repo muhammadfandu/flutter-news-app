@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:news_app/mainMenu.dart';
+import 'package:news_app/register.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
@@ -102,7 +103,7 @@ class _LoginState extends State<Login> {
         return Scaffold(
             appBar: AppBar(),
             body: Container(
-              padding: EdgeInsets.all(10.0),
+              padding: EdgeInsets.all(15.0),
               child: Form(
                 key: _key,
                 child: ListView(
@@ -110,13 +111,18 @@ class _LoginState extends State<Login> {
                     TextFormField(
                       validator: (e) {
                         if (e.isEmpty) {
-                          return "Please insert username";
+                          return "Please insert email";
                         }
                       },
                       onSaved: (e) => email = e,
                       decoration: InputDecoration(labelText: "Email"),
                     ),
                     TextFormField(
+                      validator: (e) {
+                        if (e.isEmpty) {
+                          return "Please insert password";
+                        }
+                      },
                       obscureText: _secureText,
                       onSaved: (e) => password = e,
                       decoration: InputDecoration(
@@ -137,6 +143,16 @@ class _LoginState extends State<Login> {
                         style: TextStyle(color: Colors.white),
                       ),
                       color: Colors.blue,
+                    ),
+                    InkWell(
+                      onTap: () {
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => Register()));
+                      },
+                      child: Text(
+                        "Create New Account",
+                        textAlign: TextAlign.center,
+                      ),
                     )
                   ],
                 ),
