@@ -5,9 +5,11 @@ import 'package:http/http.dart' as http;
 import 'package:news_app/mainMenu.dart';
 import 'package:news_app/register.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'constant/constantFile.dart';
 
 void main() {
   runApp(MaterialApp(
+    debugShowCheckedModeBanner: false,
     home: Login(),
   ));
 }
@@ -43,8 +45,7 @@ class _LoginState extends State<Login> {
   }
 
   login() async {
-    final response =
-        await http.post("http://192.168.18.193/app_news/login.php", body: {
+    final response = await http.post(BaseUrl.login, body: {
       "email": email,
       "password": password,
     });
@@ -52,31 +53,44 @@ class _LoginState extends State<Login> {
 
     int value = data['value'];
     String pesan = data['message'];
+    String usernameAPI = data['username'];
+    String emailAPI = data['email'];
+    String idUserAPI = data['id_user'];
     if (value == 1) {
       setState(() {
         _loginStatus = LoginStatus.signIn;
-        savePref(value);
+        savePref(value, usernameAPI, emailAPI, idUserAPI);
       });
       print(pesan);
+      // print(usernameAPI + " " + emailAPI + " " + idUserAPI);
     } else {
       print(pesan);
     }
   }
 
-  savePref(int value) async {
+  savePref(int value, String username, String email, String idUser) async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     setState(() {
       preferences.setInt("value", value);
+      preferences.setString("username", username);
+      preferences.setString("email", email);
+      preferences.setString("id_user", idUser);
       preferences.commit();
     });
   }
 
-  var value;
+  var value, usernamePref, emailPref, idUserPref;
   getPref() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     setState(() {
       value = preferences.getInt("value");
       _loginStatus = value == 1 ? LoginStatus.signIn : LoginStatus.notSignIn;
+
+      usernamePref = preferences.getString("username");
+      emailPref = preferences.getString("email");
+      idUserPref = preferences.getString("id_user");
+
+      print(usernamePref + " " + emailPref + " " + idUserPref);
     });
   }
 

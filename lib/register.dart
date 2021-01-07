@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'constant/constantFile.dart';
 
 class Register extends StatefulWidget {
   @override
@@ -47,8 +48,7 @@ class _RegisterState extends State<Register> {
   }
 
   register() async {
-    final response = await http.post(
-        "http://192.168.18.193/app_news/register.php",
+    final response = await http.post(BaseUrl.register,
         body: {"username": username, "email": email, "password": password});
 
     final data = jsonDecode(response.body);
